@@ -1,13 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const CreateFeedback = require('./Routes/POST/CreateFeedback.js');
 const port = 4000;
 
-
-/* 
-    this is where i left off, i am currently trying to design the columns for the tables in database
-    with mysql workbench
-*/
 
 app.use(express.json());
 app.use(cors({
@@ -16,6 +12,8 @@ app.use(cors({
     methods: ['POST', 'PUT', 'DELETE'],
 }));
 
+
+app.use(CreateFeedback);
 
 app.get('/', (req, res) => {
     res.send('hello world');
