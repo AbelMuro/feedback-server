@@ -5,7 +5,7 @@ const db = require('../../Config/MySQL/db.js');
 
 router.post('/create_feedback', async (req, res) => {
     const {name, email, feedback} = req.body;
-    const id = crypto.randomBytes(16).toString('hex');
+    const id = crypto.randomUUID();
 
     try{
         const [result] = await db.execute(
