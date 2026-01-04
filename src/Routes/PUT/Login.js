@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../../Config/MySQL/db.js');
 const {config} = require('dotenv');
@@ -19,8 +19,10 @@ router.put('/login', async (req, res) => {
         )
 
         const account = results[0];
-        const passwordsMatch = await bcrypt.compare(password, account.password);
+        const hashedPassword = account.password;
+        const passwordsMatch = await bcrypt.compare(password, hashedPassword);
 
+        console.log(passwordsMatch, password, hashedPassword);
 
         if(!account){
             res.status(401).send('Email is not registered')

@@ -1,12 +1,12 @@
 const express = require('express');
 const crypto = require('crypto');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const db = require('../../Config/MySQL/db.js');
 const router = express.Router();
 
 router.post('/register_account', async (req, res) => {
     try{
-        const {email, password} = req.body;       
+        const {email, password} = req.body;    
         const id = crypto.randomUUID();
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -20,8 +20,11 @@ router.post('/register_account', async (req, res) => {
     }
     catch(error){
         const message = error.message;
-        console.log(message);
-        res.status(500).send(message);
+        const code = error.code;
+        if(code === 'ER_DUP_ENTRY')
+            res.status(401).send('Email is already registered');
+        else
+            res.status(500).send(message);
     }
 })
 
