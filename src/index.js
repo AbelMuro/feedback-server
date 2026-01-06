@@ -8,10 +8,6 @@ const ForgotPassword = require('./Routes/PUT/ForgotPassword.js');
 const ResetPassword = require('./Routes/PUT/ResetPassword.js');
 const port = 4000;
 
-/*
-    this is where i left off, i need to test out the login and register functionality on the back end
-*/
-
 
 app.use(express.json());
 app.use(cors({
