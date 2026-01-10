@@ -9,6 +9,7 @@ const Logout = require('./Routes/DELETE/Logout.js');
 const ForgotPassword = require('./Routes/PUT/ForgotPassword.js');
 const ResetPassword = require('./Routes/PUT/ResetPassword.js');
 const Authorization = require('./Routes/GET/Authorization.js');
+const UpdateAccount = require('./Routes/PUT/UpdateAccount.js');
 const port = 4000;
 
 
@@ -29,6 +30,7 @@ app.use(Logout);
 app.use(ForgotPassword);
 app.use(ResetPassword);
 app.use(Authorization);
+app.use(UpdateAccount);
 
 app.get('/', (req, res) => {
     res.send('hello world');

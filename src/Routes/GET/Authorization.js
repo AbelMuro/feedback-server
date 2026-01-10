@@ -4,7 +4,6 @@ const router = express.Router();
 router.get('/authorization', (req, res) => {
     try{
         const accessToken = req.cookies.accessToken;
-        console.log(accessToken);
 
         if(accessToken)
             res.status(200).send('User is logged in');
