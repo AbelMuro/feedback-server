@@ -10,7 +10,7 @@ router.post('/create_feedback', async (req, res) => {
     try{
         const [result] = await db.execute(
             'INSERT INTO feedback (id, email, name, feedback) VALUES (?, ?, ?, ?)',
-            [id, name, email, feedback]
+            [id, email, name, feedback]
         );
 
         res.status(200).send('Feedback has been submitted!');
