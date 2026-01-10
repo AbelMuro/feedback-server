@@ -1,27 +1,31 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const cookieParser = require('cookie-parser');
 const CreateFeedback = require('./Routes/POST/CreateFeedback.js');
-const RegisterAccount = require('./Routes/POST/RegisterAccount.js');
+const Register = require('./Routes/POST/Register.js');
 const Login = require('./Routes/PUT/Login.js');
+const Logout = require('./Routes/DELETE/Logout.js');
 const ForgotPassword = require('./Routes/PUT/ForgotPassword.js');
 const ResetPassword = require('./Routes/PUT/ResetPassword.js');
 const Authorization = require('./Routes/GET/Authorization.js');
 const port = 4000;
 
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:5173',
     allowedHeaders: ['Authorization', 'Content-Type'],
-    methods: ['POST', 'PUT', 'DELETE'],
+    methods: ['POST', 'PUT', 'DELETE', 'GET'],
     credentials: true
 }));
 
 
 app.use(CreateFeedback);
-app.use(RegisterAccount);
+app.use(Register);
 app.use(Login);
+app.use(Logout);
 app.use(ForgotPassword);
 app.use(ResetPassword);
 app.use(Authorization);

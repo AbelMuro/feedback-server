@@ -22,8 +22,6 @@ router.put('/login', async (req, res) => {
         const hashedPassword = account.password;
         const passwordsMatch = await bcrypt.compare(password, hashedPassword);
 
-        console.log(passwordsMatch, password, hashedPassword);
-
         if(!account){
             res.status(401).send('Email is not registered')
             return;
@@ -33,7 +31,6 @@ router.put('/login', async (req, res) => {
             res.status(401).send('Credentials are invalid');
             return;
         }
-            
 
         const token = jwt.sign({...account}, JWT_SECRET);
         res.cookie('accessToken', token, {httpOnly: true, secure: true, sameSite: 'None'});
