@@ -3,18 +3,30 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const db = require('../../Config/MySQL/db.js');
 const router = express.Router();
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({storage: storage});
 
-router.post('/register_account', async (req, res) => {
+router.post('/register_account', upload.single('image'), async (req, res) => {
     try{
-        const {email, password} = req.body;    
-        const id = crypto.randomUUID();
+        const {email, password, name} = req.body;    
+        const image = req.file;        
+        const accountId = crypto.randomUUID();
+        const imageId = crypto.randomUUID();
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const [result] = await db.execute(
-            'INSERT INTO accounts (id, email, password) VALUES (?, ?, ?)',
-            [id, email, hashedPassword]
+
+        await db.execute(
+           image ? 'INSERT INTO accounts (id, email, password, name, image) VALUES (?, ?, ?, ?, ?)' : 'INSERT INTO accounts (id, email, password, name) VALUES (?, ?, ?, ?)',
+           image ? [accountId, email, hashedPassword, name, imageId] : [accountId, email, hashedPassword, name]
         );
+        if(image){
+            await db.execute(
+                'INSERT INTO account_images (id, account_id, filename, mime_type, data, size) VALUES(?, ?, ?, ?, ?, ?)',
+                [imageId, accountId, image.originalname, image.mimetype, image.buffer, image.size]
+            )            
+        }
 
         res.status(200).send('Account has been successfully created');
     }
