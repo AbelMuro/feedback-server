@@ -10,6 +10,8 @@ const ForgotPassword = require('./Routes/PUT/ForgotPassword.js');
 const ResetPassword = require('./Routes/PUT/ResetPassword.js');
 const Authorization = require('./Routes/GET/Authorization.js');
 const UpdateAccount = require('./Routes/PUT/UpdateAccount.js');
+const GetAccount = require('./Routes/GET/GetAccount.js');
+const GetAccountImage = require('./Routes/GET/GetAccountImage.js');
 const port = 4000;
 
 
@@ -31,6 +33,8 @@ app.use(ForgotPassword);
 app.use(ResetPassword);
 app.use(Authorization);
 app.use(UpdateAccount);
+app.use(GetAccount);
+app.use(GetAccountImage);
 
 app.get('/', (req, res) => {
     res.send('hello world');

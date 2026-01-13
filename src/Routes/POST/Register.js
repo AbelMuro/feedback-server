@@ -16,14 +16,13 @@ router.post('/register_account', upload.single('image'), async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-
         await db.execute(
            image ? 'INSERT INTO accounts (id, email, password, name, image) VALUES (?, ?, ?, ?, ?)' : 'INSERT INTO accounts (id, email, password, name) VALUES (?, ?, ?, ?)',
            image ? [accountId, email, hashedPassword, name, imageId] : [accountId, email, hashedPassword, name]
         );
         if(image){
             await db.execute(
-                'INSERT INTO account_images (id, account_id, filename, mime_type, data, size) VALUES(?, ?, ?, ?, ?, ?)',
+                'INSERT INTO account_images (id, account_id, filename, mime_type, data, size) VALUES (?, ?, ?, ?, ?, ?)',
                 [imageId, accountId, image.originalname, image.mimetype, image.buffer, image.size]
             )            
         }
