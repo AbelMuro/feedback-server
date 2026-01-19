@@ -12,6 +12,9 @@ const Authorization = require('./Routes/GET/Authorization.js');
 const UpdateAccount = require('./Routes/PUT/UpdateAccount.js');
 const GetAccount = require('./Routes/GET/GetAccount.js');
 const GetAccountImage = require('./Routes/GET/GetAccountImage.js');
+const GetAllFeedback = require('./Routes/GET/GetAllFeedback.js');
+const GetFeedback = require('./Routes/GET/GetFeedback.js');
+const CreateResponse = require('./Routes/POST/CreateResponse.js');
 const port = 4000;
 
 
@@ -35,6 +38,9 @@ app.use(Authorization);
 app.use(UpdateAccount);
 app.use(GetAccount);
 app.use(GetAccountImage);
+app.use(GetAllFeedback);
+app.use(GetFeedback);
+app.use(CreateResponse);
 
 app.get('/', (req, res) => {
     res.send('hello world');

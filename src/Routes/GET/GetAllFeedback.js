@@ -1,32 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const crypto = require('crypto');
-const db = require('../../Config/MySQL/db.js');
 const jwt = require('jsonwebtoken');
+const db = require('../../Config/MySQL/db.js');
 const {config} = require('dotenv');
-
 config();
 
-router.post('/create_feedback', async (req, res) => {
-
+router.get('/get_all_feedback', async (req, res) => {
     try{
-        const {title, feedback} = req.body;
-        const id = crypto.randomUUID();
         const JWT_SECRET = process.env.JWT_SECRET;
         const accessToken = req.cookies.accessToken;
 
         if(!accessToken)
             return res.status(401).send('User is not logged in');
-        
-        const decodedToken = jwt.verify(accessToken, JWT_SECRET);
-        const {id : accountId} = decodedToken;
 
-        const [result] = await db.execute(
-            'INSERT INTO feedback (id, title, feedback, account_id) VALUES (?, ?, ?, ?)',
-            [id, title, feedback, accountId]
+        const decodedToken = jwt.verify(accessToken, JWT_SECRET);
+        const {id} = decodedToken;
+
+        const [results] = await db.execute(
+            'SELECT * FROM feedback WHERE account_id = ?',
+            [id]
         );
 
-        res.status(200).send('Feedback has been submitted!');
+        res.status(200).json(results);
     }
     catch(error){
         const message = error.message;
