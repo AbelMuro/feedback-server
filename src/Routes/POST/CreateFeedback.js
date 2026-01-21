@@ -4,7 +4,6 @@ const crypto = require('crypto');
 const db = require('../../Config/MySQL/db.js');
 const jwt = require('jsonwebtoken');
 const {config} = require('dotenv');
-
 config();
 
 router.post('/create_feedback', async (req, res) => {
@@ -22,7 +21,7 @@ router.post('/create_feedback', async (req, res) => {
         const {id : accountId} = decodedToken;
 
         const [result] = await db.execute(
-            'INSERT INTO feedback (id, title, feedback, account_id) VALUES (?, ?, ?, ?)',
+            'INSERT INTO threads (id, title, feedback, account_id) VALUES (?, ?, ?, ?)',
             [id, title, feedback, accountId]
         );
 

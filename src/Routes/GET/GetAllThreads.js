@@ -5,7 +5,7 @@ const db = require('../../Config/MySQL/db.js');
 const {config} = require('dotenv');
 config();
 
-router.get('/get_all_feedback', async (req, res) => {
+router.get('/get_all_threads', async (req, res) => {
     try{
         const JWT_SECRET = process.env.JWT_SECRET;
         const accessToken = req.cookies.accessToken;
@@ -17,7 +17,7 @@ router.get('/get_all_feedback', async (req, res) => {
         const {id} = decodedToken;
 
         const [results] = await db.execute(
-            'SELECT * FROM feedback WHERE account_id = ?',
+            'SELECT * FROM threads WHERE account_id = ?',
             [id]
         );
 

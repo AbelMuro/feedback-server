@@ -12,11 +12,11 @@ const Authorization = require('./Routes/GET/Authorization.js');
 const UpdateAccount = require('./Routes/PUT/UpdateAccount.js');
 const GetAccount = require('./Routes/GET/GetAccount.js');
 const GetAccountImage = require('./Routes/GET/GetAccountImage.js');
-const GetAllFeedback = require('./Routes/GET/GetAllFeedback.js');
-const GetFeedback = require('./Routes/GET/GetFeedback.js');
+const GetAllThreads = require('./Routes/GET/GetAllThreads.js');
+const GetThread = require('./Routes/GET/GetThread.js');
 const CreateResponse = require('./Routes/POST/CreateResponse.js');
+const GetAllThreadResponses = require('./Routes/GET/GetAllThreadResponses.js');
 const port = 4000;
-
 
 app.use(cookieParser());
 app.use(express.json());
@@ -26,7 +26,6 @@ app.use(cors({
     methods: ['POST', 'PUT', 'DELETE', 'GET'],
     credentials: true
 }));
-
 
 app.use(CreateFeedback);
 app.use(Register);
@@ -38,9 +37,10 @@ app.use(Authorization);
 app.use(UpdateAccount);
 app.use(GetAccount);
 app.use(GetAccountImage);
-app.use(GetAllFeedback);
-app.use(GetFeedback);
+app.use(GetAllThreads);
+app.use(GetThread);
 app.use(CreateResponse);
+app.use(GetAllThreadResponses);
 
 app.get('/', (req, res) => {
     res.send('hello world');
