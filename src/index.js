@@ -16,6 +16,7 @@ const GetAllThreads = require('./Routes/GET/GetAllThreads.js');
 const GetThread = require('./Routes/GET/GetThread.js');
 const CreateResponse = require('./Routes/POST/CreateResponse.js');
 const GetAllThreadResponses = require('./Routes/GET/GetAllThreadResponses.js');
+const GetImage = require('./Routes/GET/GetImage.js');
 const port = 4000;
 
 app.use(cookieParser());
@@ -41,6 +42,7 @@ app.use(GetAllThreads);
 app.use(GetThread);
 app.use(CreateResponse);
 app.use(GetAllThreadResponses);
+app.use(GetImage);
 
 app.get('/', (req, res) => {
     res.send('hello world');

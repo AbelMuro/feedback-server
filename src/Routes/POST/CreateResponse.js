@@ -12,6 +12,7 @@ router.post('/create_response', async (req, res) => {
         const JWT_SECRET = process.env.JWT_SECRET;
         const accessToken = req.cookies.accessToken;
         const id = crypto.randomUUID();
+        const created_at = String(new Date().getTime());
 
         if(!accessToken)
             return res.status(401).send('User is not logged in');
@@ -20,8 +21,8 @@ router.post('/create_response', async (req, res) => {
         const {name, image} = decodedToken;
 
         await db.execute(
-            'INSERT INTO thread_responses (id, name, image, response, thread_id) VALUES (?, ?, ?, ?, ?)',
-            [id, name, image, response, threadId]
+            'INSERT INTO thread_responses (id, name, image, response, thread_id, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+            [id, name, image, response, threadId, created_at]
         );
 
         res.status(200).send('Response has been recorded');
