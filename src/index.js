@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
-const CreateFeedback = require('./Routes/POST/CreateFeedback.js');
+const CreateThread = require('./Routes/POST/CreateThread.js');
 const Register = require('./Routes/POST/Register.js');
 const Login = require('./Routes/PUT/Login.js');
 const Logout = require('./Routes/DELETE/Logout.js');
@@ -14,8 +14,8 @@ const GetAccount = require('./Routes/GET/GetAccount.js');
 const GetAccountImage = require('./Routes/GET/GetAccountImage.js');
 const GetAllThreads = require('./Routes/GET/GetAllThreads.js');
 const GetThread = require('./Routes/GET/GetThread.js');
-const CreateResponse = require('./Routes/POST/CreateResponse.js');
-const GetAllThreadResponses = require('./Routes/GET/GetAllThreadResponses.js');
+const CreateMessage = require('./Routes/POST/CreateMessage.js');
+const GetAllThreadMessages = require('./Routes/GET/GetAllThreadMessages.js');
 const GetImage = require('./Routes/GET/GetImage.js');
 const port = 4000;
 
@@ -28,7 +28,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(CreateFeedback);
+app.use(CreateThread);
 app.use(Register);
 app.use(Login);
 app.use(Logout);
@@ -40,8 +40,8 @@ app.use(GetAccount);
 app.use(GetAccountImage);
 app.use(GetAllThreads);
 app.use(GetThread);
-app.use(CreateResponse);
-app.use(GetAllThreadResponses);
+app.use(CreateMessage);
+app.use(GetAllThreadMessages);
 app.use(GetImage);
 
 app.get('/', (req, res) => {

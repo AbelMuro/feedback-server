@@ -6,8 +6,13 @@ const jwt = require('jsonwebtoken');
 const {config} = require('dotenv');
 config();
 
-router.post('/create_feedback', async (req, res) => {
+/* 
+    Watcher.add(
+        'feedback database.thread_messages.thread_id.value'
+    )
+*/
 
+router.post('/create_thread', async (req, res) => {
     try{
         const {title, feedback} = req.body;
         const id = crypto.randomUUID();

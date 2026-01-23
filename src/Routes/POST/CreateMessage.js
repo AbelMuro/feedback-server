@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 const {config} = require('dotenv');
 config();
 
-router.post('/create_response', async (req, res) => {
+router.post('/create_message', async (req, res) => {
     try{
-        const {response, threadId} = req.body;
+        const {message, threadId} = req.body;
         const JWT_SECRET = process.env.JWT_SECRET;
         const accessToken = req.cookies.accessToken;
         const id = crypto.randomUUID();
@@ -21,8 +21,8 @@ router.post('/create_response', async (req, res) => {
         const {name, image} = decodedToken;
 
         await db.execute(
-            'INSERT INTO thread_responses (id, name, image, response, thread_id, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-            [id, name, image, response, threadId, created_at]
+            'INSERT INTO thread_responses (id, name, image, message, thread_id, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+            [id, name, image, message, threadId, created_at]
         );
 
         res.status(200).send('Response has been recorded');
