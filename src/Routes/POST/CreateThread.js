@@ -6,12 +6,6 @@ const jwt = require('jsonwebtoken');
 const {config} = require('dotenv');
 config();
 
-/* 
-    Watcher.add(
-        'feedback database.thread_messages.thread_id.value'
-    )
-*/
-
 router.post('/create_thread', async (req, res) => {
     try{
         const {title, feedback} = req.body;

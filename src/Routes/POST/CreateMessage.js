@@ -21,7 +21,7 @@ router.post('/create_message', async (req, res) => {
         const {name, image} = decodedToken;
 
         await db.execute(
-            'INSERT INTO thread_responses (id, name, image, message, thread_id, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO thread_messages (id, name, image, message, thread_id, created_at) VALUES (?, ?, ?, ?, ?, ?)',
             [id, name, image, message, threadId, created_at]
         );
 
