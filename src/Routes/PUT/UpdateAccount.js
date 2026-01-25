@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
 const db = require('../../Config/MySQL/db.js');
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -21,23 +20,19 @@ router.put('/update_account', upload.single('image'), async (req, res) => {
         const accountId = decodedToken.id;
 
         if(file){
-            const imageId = crypto.randomUUID();
-
             await db.execute(
-                'DELETE FROM account_images WHERE account_id = ?',
-                [accountId]
-            )
-            await db.execute(
-                'UPDATE account_images SET id = ?, filename = ?, mime_type = ?, size = ?, data = ? WHERE account_id = ?',
-                [imageId, file.filename, file.mimetype, file.size, file.buffer, accountId]
+                'UPDATE account_images SET filename = ?, mime_type = ?, size = ?, data = ? WHERE account_id = ?',
+                [file.originalname, file.mimetype, file.size, file.buffer, accountId]
             )
         }
 
-        const [results] = await db.execute(
-            'UPDATE accounts SET email = ?, name = ?, image WHERE id = ?',
-            [email, accountId]
+        await db.execute(
+            'UPDATE accounts SET email = ?, name = ? WHERE id = ?',
+            [email, name, accountId]
         );
 
+        const newAccessToken = jwt.sign({...decodedToken, email, name}, JWT_SECRET);
+        res.cookie('accessToken', newAccessToken, {httpOnly: true, secure: true, sameSite: 'None'});
         res.status(200).send('Account has been updated')
     }
     catch(error){

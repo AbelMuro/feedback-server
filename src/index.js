@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:5173',
-    allowedHeaders: ['Authorization', 'Content-Type'],
+    allowedHeaders: ['Authorization', 'Content-Type', ''],
     methods: ['POST', 'PUT', 'DELETE', 'GET'],
     credentials: true
 }));
