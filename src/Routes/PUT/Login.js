@@ -18,14 +18,13 @@ router.put('/login', async (req, res) => {
             [email]
         )
 
+        if(!results.length)
+            return res.status(401).send('Email is not registered');
+        
+
         const account = results[0];
         const hashedPassword = account.password;
         const passwordsMatch = await bcrypt.compare(password, hashedPassword);
-
-        if(!account){
-            res.status(401).send('Email is not registered')
-            return;
-        }
 
         if(!passwordsMatch){
             res.status(401).send('Credentials are invalid');

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../Config/MySQL/db.js');
-const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {config} = require('dotenv');
