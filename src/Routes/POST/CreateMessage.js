@@ -3,6 +3,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const db = require('../../Config/MySQL/db.js');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer')
 const {config} = require('dotenv');
 config();
 
@@ -20,13 +21,44 @@ router.post('/create_message', async (req, res) => {
         const decodedToken = jwt.verify(accessToken, JWT_SECRET);
         const {name, image} = decodedToken;
 
-        await db.execute(
+        const [results] = await db.execute(
             'INSERT INTO thread_messages (id, name, image, message, thread_id, thread_owner_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [id, name, image, message, threadId, threadOwnerId, created_at]
         );
 
-        res.status(200).send('Response has been recorded');
+        if(!results.affectedRows) 
+            return res.status(501).send('Could not post message to thread');
 
+        const [threadOwnerAccount] = await db.execute(
+            'SELECT * FROM accounts WHERE id = ?',
+            [threadOwnerId]
+        );
+
+        if(!threadOwnerAccount.length) 
+            return res.status(201).send('Response has been recorded, but could not send email to thread owner')
+
+        const threadOwnerEmail = threadOwnerAccount[0].email;
+
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            secure: true,
+            port: 465,
+            auth: {
+                user: process.env.email,
+                pass: process.env.app_password,
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.email,
+            to: threadOwnerEmail,
+            subject: 'You have a new message to your feedback!',
+            text: `Please click on the following link to view your new message`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).send('Response has been recorded');
     }
     catch(error){
         const message = error.message;

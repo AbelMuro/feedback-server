@@ -13,13 +13,13 @@ router.put('/update_account', upload.single('image'), async (req, res) => {
     try{
         const {email, name} = req.body;
         const file = req.file;
-        console.log(file);
         const JWT_SECRET = process.env.JWT_SECRET;
         const accessToken = req.cookies.accessToken;
         if(!accessToken) 
             return res.status(401).send('User is not logged in');
         const decodedToken = jwt.verify(accessToken, JWT_SECRET);
         const accountId = decodedToken.id;
+        let newAccessToken;
 
         if(file){
             const [results] = await db.execute(
@@ -27,23 +27,33 @@ router.put('/update_account', upload.single('image'), async (req, res) => {
                 [file.originalname, file.mimetype, file.size, file.buffer, accountId]
             );
 
-
             if(!results.affectedRows){
                 const imageId = crypto.randomUUID();
                 await db.execute(
                     'INSERT INTO account_images (filename, mime_type, account_id, id, size, data) VALUES (?, ?, ?, ?, ?, ?)',
                     [file.originalname, file.mimetype, accountId, imageId, file.size, file.buffer]
-                );                
+                );   
+                await db.execute(
+                    'UPDATE accounts SET email = ?, name = ?, image = ? WHERE id = ?',
+                    [email, name, imageId, accountId]
+                );                  
+                newAccessToken = jwt.sign({...decodedToken, email, name, image: imageId}, JWT_SECRET);
             }
-
+            else
+                await db.execute(
+                    'UPDATE accounts SET email = ?, name = ? WHERE id = ?',
+                    [email, name, accountId]
+                ); 
+                newAccessToken = jwt.sign({...decodedToken, email, name}, JWT_SECRET);
+        }
+        else{
+            await db.execute(
+                'UPDATE accounts SET email = ?, name = ? WHERE id = ?',
+                [email, name, accountId]
+            );           
+            newAccessToken = jwt.sign({...decodedToken, email, name}, JWT_SECRET); 
         }
 
-        await db.execute(
-            'UPDATE accounts SET email = ?, name = ? WHERE id = ?',
-            [email, name, accountId]
-        );
-
-        const newAccessToken = jwt.sign({...decodedToken, email, name}, JWT_SECRET);
         res.cookie('accessToken', newAccessToken, {httpOnly: true, secure: true, sameSite: 'None'});
         res.status(200).send('Account has been updated')
     }
