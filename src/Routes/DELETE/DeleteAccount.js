@@ -50,6 +50,8 @@ router.delete('/delete_account', async (req, res) => {
        if(!threadMessageDeletionResults.affectedRows)
             return res.status(201).send('Account, image and threads were removed, but the thread_messages could not be removed')
 
+       res.clearCookie('accessToken');
+
        res.status(200).send('Account has been successfully deleted');
 
     }

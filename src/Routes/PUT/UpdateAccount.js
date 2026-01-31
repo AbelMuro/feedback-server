@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const db = require('../../Config/MySQL/db.js');
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -12,6 +13,7 @@ router.put('/update_account', upload.single('image'), async (req, res) => {
     try{
         const {email, name} = req.body;
         const file = req.file;
+        console.log(file);
         const JWT_SECRET = process.env.JWT_SECRET;
         const accessToken = req.cookies.accessToken;
         if(!accessToken) 
@@ -20,10 +22,20 @@ router.put('/update_account', upload.single('image'), async (req, res) => {
         const accountId = decodedToken.id;
 
         if(file){
-            await db.execute(
+            const [results] = await db.execute(
                 'UPDATE account_images SET filename = ?, mime_type = ?, size = ?, data = ? WHERE account_id = ?',
                 [file.originalname, file.mimetype, file.size, file.buffer, accountId]
-            )
+            );
+
+
+            if(!results.affectedRows){
+                const imageId = crypto.randomUUID();
+                await db.execute(
+                    'INSERT INTO account_images (filename, mime_type, account_id, id, size, data) VALUES (?, ?, ?, ?, ?, ?)',
+                    [file.originalname, file.mimetype, accountId, imageId, file.size, file.buffer]
+                );                
+            }
+
         }
 
         await db.execute(

@@ -29,7 +29,7 @@ router.get('/account_image', async (req, res) => {
         const data = imageData.data;
 
         res.set('Content-Type', mimeType);
-        res.send(data)  
+        res.status(200).send(data)  
     }
     catch(error){
         const message = error.message;
