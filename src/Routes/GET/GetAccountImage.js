@@ -17,12 +17,15 @@ router.get('/account_image', async (req, res) => {
         const imageId = decodedToken.image;
 
         if(!imageId)
-            return res.status(404).send('Image not found');
+            return res.status(404).send('User doesnt have an image');
 
         const [results] = await db.execute(
             'SELECT * FROM account_images WHERE id = ?',
             [imageId]
         );
+
+        if(!results.length) 
+            return res.status(404).send('Could not find the image in database')
 
         const imageData = results[0];
         const mimeType = imageData.mime_type;

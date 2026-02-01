@@ -1,21 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const db = require('../../Config/MySQL/db.js');
 const {config} = require('dotenv');
 config();
 
-router.get('/get_image', async (req, res) => {
+router.get('/get_image/:imageId', async (req, res) => {
     try{
-        const accessToken = req.cookies.accessToken;
-        const JWT_SECRET = process.env.JWT_SECRET;
-        const decodedToken = jwt.verify(accessToken, JWT_SECRET);
-        const {image} = decodedToken;
-
+        const imageId = req.params.imageId;
         const [results] = await db.execute(
             'SELECT * FROM account_images WHERE id = ?',
-            [image]
-        )
+            [imageId]
+        );
 
         const imageData = results[0];
         const blob = imageData.data;

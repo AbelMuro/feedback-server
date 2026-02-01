@@ -38,13 +38,17 @@ router.put('/update_account', upload.single('image'), async (req, res) => {
                     [email, name, imageId, accountId]
                 );                  
                 newAccessToken = jwt.sign({...decodedToken, email, name, image: imageId}, JWT_SECRET);
+                console.log('inside first IF statement')
             }
-            else
+            else{
                 await db.execute(
                     'UPDATE accounts SET email = ?, name = ? WHERE id = ?',
                     [email, name, accountId]
                 ); 
                 newAccessToken = jwt.sign({...decodedToken, email, name}, JWT_SECRET);
+                console.log('inside first ELSE statement')                
+            }
+
         }
         else{
             await db.execute(
@@ -52,6 +56,7 @@ router.put('/update_account', upload.single('image'), async (req, res) => {
                 [email, name, accountId]
             );           
             newAccessToken = jwt.sign({...decodedToken, email, name}, JWT_SECRET); 
+            console.log('inside second ELSE statement')
         }
 
         res.cookie('accessToken', newAccessToken, {httpOnly: true, secure: true, sameSite: 'None'});

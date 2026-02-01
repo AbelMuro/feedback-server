@@ -12,18 +12,19 @@ router.post('/create_message', async (req, res) => {
         const {message, threadId, threadOwnerId} = req.body;
         const JWT_SECRET = process.env.JWT_SECRET;
         const accessToken = req.cookies.accessToken;  
-        const id = crypto.randomUUID();
+        const messageId = crypto.randomUUID();
         const created_at = String(new Date().getTime());
+        const threadLink = `http://localhost:5173/thread/${threadId}`;
 
         if(!accessToken)
             return res.status(401).send('User is not logged in');
 
         const decodedToken = jwt.verify(accessToken, JWT_SECRET);
-        const {name, image} = decodedToken;
+        const {id: messageOwnerId} = decodedToken;
 
         const [results] = await db.execute(
-            'INSERT INTO thread_messages (id, name, image, message, thread_id, thread_owner_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [id, name, image, message, threadId, threadOwnerId, created_at]
+            'INSERT INTO thread_messages (id, message_owner_id, message, thread_id, thread_owner_id, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+            [messageId, messageOwnerId, message, threadId, threadOwnerId, created_at]
         );
 
         if(!results.affectedRows) 
@@ -53,7 +54,18 @@ router.post('/create_message', async (req, res) => {
             from: process.env.email,
             to: threadOwnerEmail,
             subject: 'You have a new message to your feedback!',
-            text: `Please click on the following link to view your new message`
+            html: `
+                <h1 style="font-size: 2rem">
+                    Someone has replied to your feedback
+                </h1>
+                <p style="font-size: 1rem">
+                    Please click on the link below to view the new message
+                </p>
+                <a href="${threadLink}" target="_blank" style="font-size: 1rem">
+                    Click here
+                </a>
+
+            `
         };
 
         await transporter.sendMail(mailOptions);
