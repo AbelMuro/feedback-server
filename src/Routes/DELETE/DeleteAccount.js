@@ -14,41 +14,27 @@ router.delete('/delete_account', async (req, res) => {
             return res.status(401).send('User is not logged in');
 
         const decodedToken = jwt.verify(accessToken, JWT_SECRET);
-        const {id, image} = decodedToken;
+        const {id} = decodedToken;
 
         const [accountDeletionResults] = await db.execute(
             'DELETE FROM accounts WHERE id = ?',
             [id]
-        );
+        );     
 
-        if(!accountDeletionResults.affectedRows)
-            return res.status(404).send('Account was not found in database')        
-
-        if(image){
-            const [imageDeletionResults] = await db.execute(
-                'DELETE FROM account_images WHERE account_id = ?',
-                [id]
-            );
-            if(!imageDeletionResults.affectedRows)
-                return res.status(201).send('Account was deleted but account image could not be removed')                 
-        }
-  
-       const [threadDeletionResults] = await db.execute(
+        await db.execute(
+            'DELETE FROM account_images WHERE account_id = ?',
+            [id]
+        );             
+        
+        await db.execute(
             'DELETE FROM threads WHERE account_id = ?',
             [id]
-       )
-
-       if(!threadDeletionResults.affectedRows)
-            return res.status(201).send('Account and image were removed, but the accounts threads could not be removed');
+        )
        
-
-       const [threadMessageDeletionResults] = await db.execute(
+        await db.execute(
             'DELETE FROM thread_messages WHERE thread_owner_id = ?',
             [id]
-       )
-
-       if(!threadMessageDeletionResults.affectedRows)
-            return res.status(201).send('Account, image and threads were removed, but the thread_messages could not be removed')
+        )
 
        res.clearCookie('accessToken');
 

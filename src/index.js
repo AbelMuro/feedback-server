@@ -19,6 +19,7 @@ const GetAllThreadMessages = require('./Routes/GET/GetAllThreadMessages.js');
 const GetImage = require('./Routes/GET/GetImage.js');
 const UpdatePassword = require('./Routes/PUT/UpdatePassword.js');
 const DeleteAccount = require('./Routes/DELETE/DeleteAccount.js');
+const GetUser = require('./Routes/GET/GetUser.js');
 const port = 4000;
 
 app.use(cookieParser());
@@ -47,6 +48,7 @@ app.use(GetAllThreadMessages);
 app.use(GetImage);
 app.use(UpdatePassword);
 app.use(DeleteAccount);
+app.use(GetUser);
 
 app.get('/', (req, res) => {
     res.send('hello world');
