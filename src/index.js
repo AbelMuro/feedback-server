@@ -20,6 +20,7 @@ const GetImage = require('./Routes/GET/GetImage.js');
 const UpdatePassword = require('./Routes/PUT/UpdatePassword.js');
 const DeleteAccount = require('./Routes/DELETE/DeleteAccount.js');
 const GetUser = require('./Routes/GET/GetUser.js');
+const AdminRegister = require('./Routes/POST/AdminRegister.js');
 const port = 4000;
 
 app.use(cookieParser());
@@ -49,6 +50,7 @@ app.use(GetImage);
 app.use(UpdatePassword);
 app.use(DeleteAccount);
 app.use(GetUser);
+app.use(AdminRegister);
 
 app.get('/', (req, res) => {
     res.send('hello world');
