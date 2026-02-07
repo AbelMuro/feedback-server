@@ -14,14 +14,25 @@ router.get('/get_all_threads', async (req, res) => {
             return res.status(401).send('User is not logged in');
 
         const decodedToken = jwt.verify(accessToken, JWT_SECRET);
-        const {id} = decodedToken;
+        const {id, admin : isAdmin} = decodedToken;
+        let allThreads = [];
 
-        const [results] = await db.execute(
-            'SELECT * FROM threads WHERE account_id = ?',
-            [id]
-        );
+        if(isAdmin){
+            const [results] = await db.execute(
+                'SELECT * FROM threads'
+            )
+            allThreads = results;
+        }
+        else{
+            const [results] = await db.execute(
+                'SELECT * FROM threads WHERE account_id = ?',
+                [id]
+            );    
+            allThreads = results;        
+        }
 
-        res.status(200).json(results);
+
+        res.status(200).json(allThreads);
     }
     catch(error){
         const message = error.message;

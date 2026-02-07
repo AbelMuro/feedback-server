@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const db = require('../../Config/MySQL/db.js');
+const db = require('../../../Config/MySQL/db.js');
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({storage});
@@ -13,16 +13,20 @@ router.post('/admin_register', upload.single('image'), async (req, res) => {
         const image = req.file;
         const accountId = crypto.randomUUID();
 
-        let [allAdminAccounts] = await db.execute('SELECT * FROM admin_accounts');
+        let [allAdminKeys] = await db.execute('SELECT * FROM admin_keys');
 
-        const allAccounts = allAdminAccounts.filter((account) => {
-            return bcrypt.compareSync(key, account.key);
+        const rows = allAdminKeys.filter((row) => {
+            return bcrypt.compareSync(key, row.key);
         });
 
-        if(!allAccounts.length)
+        if(!rows.length)
             return res.status(404).send('Key is invalid, could not create admin account');
 
-        const account = allAccounts[0];
+        const row = rows[0];
+        const hashedKey = row.key;
+
+        if(row.account_id) 
+            return res.status(501).send('Key is already in use.')
 
 
         if(image){
@@ -33,16 +37,21 @@ router.post('/admin_register', upload.single('image'), async (req, res) => {
             );
 
             await db.execute(
-                'UPDATE admin_accounts SET email = ?, name = ?, image = ?, id = ? WHERE `key` = ?',
-                [email, name, imageId, accountId, account.key]
-            );
+                'INSERT INTO accounts (id, email, name, image, password, admin) VALUES (?, ?, ?, ?, ?, ?)',
+                [accountId, email, name, imageId, hashedKey, true]
+            ) 
         }
         else{
             await db.execute(
-                'UPDATE admin_accounts SET email = ?, name = ?, id = ? WHERE `key` = ?',
-                [email, name, accountId, account.key]
-            );            
+                'INSERT INTO accounts (id, email, name, password, admin) VALUES (?, ?, ?, ?, ?, ?)',
+                [accountId, email, name, hashedKey, true]
+            )           
         }
+
+        await db.execute(
+            'UPDATE admin_keys SET account_id = ? WHERE `key` = ?',
+            [accountId, hashedKey]
+        )
 
         res.status(200).send('Admin account has been successfully created');
     }

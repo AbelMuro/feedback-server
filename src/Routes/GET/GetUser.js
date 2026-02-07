@@ -18,9 +18,10 @@ router.get('/get_user/:accountId', async (req, res) => {
         const account = results[0];
         const name = account.name;
         const imageId = account.image;    
+        const isAdmin = account.admin;
 
         res.status(200).json({
-            name, imageId
+            name, imageId, isAdmin
         })
     }
     catch(error){

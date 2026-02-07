@@ -17,8 +17,8 @@ router.post('/register_account', upload.single('image'), async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         await db.execute(
-           image ? 'INSERT INTO accounts (id, email, password, name, image) VALUES (?, ?, ?, ?, ?)' : 'INSERT INTO accounts (id, email, password, name) VALUES (?, ?, ?, ?)',
-           image ? [accountId, email, hashedPassword, name, imageId] : [accountId, email, hashedPassword, name]
+           image ? 'INSERT INTO accounts (id, email, password, name, image, admin) VALUES (?, ?, ?, ?, ?, ?)' : 'INSERT INTO accounts (id, email, password, name, admin) VALUES (?, ?, ?, ?, ?)',
+           image ? [accountId, email, hashedPassword, name, imageId, false] : [accountId, email, hashedPassword, name, false]
         );
         if(image){
             await db.execute(

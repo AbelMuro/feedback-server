@@ -13,23 +13,22 @@ router.put('/login', async (req, res) => {
         const {email, password} = req.body;
         const JWT_SECRET = process.env.JWT_SECRET;
 
-        const [results] = await db.execute(
+        const [accounts] = await db.execute(
             'SELECT * FROM accounts WHERE email = ?',
             [email]
-        )
+        );
 
-        if(!results.length)
+        if(!accounts.length)
             return res.status(401).send('Email is not registered');
         
 
-        const account = results[0];
+        const account = accounts[0];
         const hashedPassword = account.password;
         const passwordsMatch = await bcrypt.compare(password, hashedPassword);
 
-        if(!passwordsMatch){
-            res.status(401).send('Credentials are invalid');
-            return;
-        }
+        if(!passwordsMatch)
+            return res.status(401).send('Credentials are invalid');
+        
 
         const token = jwt.sign({...account}, JWT_SECRET);
         res.cookie('accessToken', token, {httpOnly: true, secure: true, sameSite: 'None'});
