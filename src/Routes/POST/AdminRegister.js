@@ -7,7 +7,6 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({storage});
 
-
 router.post('/admin_register', upload.single('image'), async (req, res) => {
     try{
         const {email, key, name} = req.body;
@@ -30,7 +29,7 @@ router.post('/admin_register', upload.single('image'), async (req, res) => {
             const imageId = crypto.randomUUID();
             await db.execute(
                 'INSERT INTO account_images (id, account_id, filename, mime_type, size, data) VALUES (?, ?, ?, ?, ?, ?)',
-                [imageId, account.key, image.originalname, image.mimetype, image.size, image.buffer]
+                [imageId, accountId, image.originalname, image.mimetype, image.size, image.buffer]
             );
 
             await db.execute(

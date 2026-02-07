@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../Config/MySQL/db.js');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {config} = require('dotenv');
 config()
@@ -26,7 +27,7 @@ router.put('/admin_login', async (req, res) => {
 
         const accessToken = jwt.sign({...account}, JWT_SECRET);
         res.cookie('accessToken', accessToken, {httpOnly: true, secure: true, sameSite: 'None'});
-        res.status(200).send('User has logged in')
+        res.status(200).send('Admin user has logged in')
     }
     catch(error){
         const message = error.message;
