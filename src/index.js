@@ -28,7 +28,7 @@ const port = 4000;
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://feedback-front-end.netlify.app',
     allowedHeaders: ['Authorization', 'Content-Type', ''],
     methods: ['POST', 'PUT', 'DELETE', 'GET'],
     credentials: true
