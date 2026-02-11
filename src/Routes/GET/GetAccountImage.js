@@ -29,10 +29,9 @@ router.get('/account_image', async (req, res) => {
 
         const imageData = results[0];
         const mimeType = imageData.mime_type;
-        const data = imageData.data.toString('base64');
+        const data = imageData.data;
 
         res.set('Content-Type', mimeType);
-        res.set('isBase64Encoded', true);
         res.status(200).send(data)  
     }
     catch(error){
