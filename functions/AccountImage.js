@@ -3,7 +3,6 @@ const db = require('../src/Config/MySQL/db.js');
 const {config} = require('dotenv');
 config();
 
-
 exports.handler = async (event, context) => { 
     try { 
         const JWT_SECRET = process.env.JWT_SECRET; 
@@ -36,7 +35,8 @@ exports.handler = async (event, context) => {
         if (!rows.length) { 
             return { 
                 statusCode: 404, 
-                body: "Image not found" }; 
+                body: "Image not found" 
+            }; 
         } 
         
         const { data, mime_type } = rows[0]; 
