@@ -15,6 +15,12 @@ exports.handler = async (event, context) => {
         if(!accessToken) { 
             return { 
                 statusCode: 401, 
+                headers: { 
+                    "Access-Control-Allow-Origin": "https://feedback-front-end.netlify.app", 
+                    "Access-Control-Allow-Credentials": "true", 
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization", 
+                    "Access-Control-Allow-Methods": "GET, OPTIONS" 
+                },
                 body: "User is not logged in" 
             }; 
         } 
@@ -24,6 +30,12 @@ exports.handler = async (event, context) => {
         if (!imageId) { 
             return { 
                 statusCode: 404, 
+                headers: { 
+                    "Access-Control-Allow-Origin": "https://feedback-front-end.netlify.app", 
+                    "Access-Control-Allow-Credentials": "true", 
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization", 
+                    "Access-Control-Allow-Methods": "GET, OPTIONS" 
+                },
                 body: "User doesn't have an image" 
             }; 
         } 
@@ -35,6 +47,12 @@ exports.handler = async (event, context) => {
         if (!rows.length) { 
             return { 
                 statusCode: 404, 
+                headers: { 
+                    "Access-Control-Allow-Origin": "https://feedback-front-end.netlify.app", 
+                    "Access-Control-Allow-Credentials": "true", 
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization", 
+                    "Access-Control-Allow-Methods": "GET, OPTIONS" 
+                },
                 body: "Image not found" 
             }; 
         } 
@@ -43,7 +61,13 @@ exports.handler = async (event, context) => {
         
         return { 
             statusCode: 200, 
-            headers: { "Content-Type": mime_type },
+            headers: { 
+                "Content-Type": mime_type, 
+                "Access-Control-Allow-Origin": "https://feedback-front-end.netlify.app", 
+                "Access-Control-Allow-Credentials": "true", 
+                "Access-Control-Allow-Headers": "Content-Type, Authorization", 
+                "Access-Control-Allow-Methods": "GET, OPTIONS" 
+            },
             body: data.toString("base64"), 
             isBase64Encoded: true 
         }; 
