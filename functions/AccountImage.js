@@ -5,6 +5,20 @@ config();
 
 exports.handler = async (event, context) => { 
     try { 
+
+        if (event.httpMethod === "OPTIONS") {   //preflight
+            return { 
+                statusCode: 200, 
+                headers: { 
+                    "Access-Control-Allow-Origin": "https://feedback-front-end.netlify.app", 
+                    "Access-Control-Allow-Credentials": "true", 
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization", 
+                    "Access-Control-Allow-Methods": "GET, OPTIONS" 
+                }, 
+                body: "" 
+            }; 
+        }
+
         const JWT_SECRET = process.env.JWT_SECRET; 
         const cookies = event.headers.cookie || ""; 
         const accessToken = cookies
