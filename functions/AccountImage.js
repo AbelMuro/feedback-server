@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const db = require('../../src/Config/MySQL/db.js');
+const db = require('../src/Config/MySQL/db.js');
 const {config} = require('dotenv');
 config();
 
