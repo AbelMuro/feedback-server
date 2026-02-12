@@ -13,7 +13,7 @@ exports.handler = async (event, context) => {
             .find(c => c.startsWith("accessToken="))
             ?.split("=")[1]; 
             
-        if (!accessToken) { 
+        if(!accessToken) { 
             return { 
                 statusCode: 401, 
                 body: "User is not logged in" 
